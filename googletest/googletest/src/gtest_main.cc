@@ -29,16 +29,6 @@
 
 #include <cstdio>
 #include "gtest/gtest.h"
-#include "sample_for_gtest.h"
-
-extern "C"
-{
-/* FreeRTOS.org includes. */
-#include "FreeRTOS.h"
-#include "task.h"
-}
-
-TEST(SampleTest, Example1) { EXPECT_EQ(TestDriver(), 0); }
 
 #if GTEST_OS_ESP8266 || GTEST_OS_ESP32
 #if GTEST_OS_ESP8266

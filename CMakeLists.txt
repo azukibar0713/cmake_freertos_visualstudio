@@ -24,8 +24,6 @@ else()
     # lots of warnings and all warnings as errors
     add_compile_options(-Wall -Wextra -pedantic -Werror)
 endif()
-add_compile_options(/WX-)
-
 
 # ----------------------------
 # include directory
@@ -39,10 +37,6 @@ include_directories(./FreeRTOS/Source/include)
 include_directories(./FreeRTOS/Source/portable/MemMang)
 include_directories(./FreeRTOS/Source/portable/MSVC-MingW)
 
-# ----------------------------
-# CMakeList.txtがあるサブディレクトリ追加.
-# ----------------------------
-add_subdirectory(./googletest/googletest)
 
 # ----------------------------
 # コンパイル対象のソース一覧を作成
@@ -79,4 +73,10 @@ add_executable(${PROJECT_NAME}
  $<TARGET_OBJECTS:freertos>
  $<TARGET_OBJECTS:src>
 )
+
+# ----------------------------
+# CMakeList.txtがあるサブディレクトリ追加.
+# ----------------------------
+#add_subdirectory(./googletest/googletest)
+add_subdirectory(./test)
 
