@@ -29,6 +29,16 @@
 
 #include <cstdio>
 #include "gtest/gtest.h"
+#include "sample_for_gtest.h"
+
+extern "C"
+{
+/* FreeRTOS.org includes. */
+#include "FreeRTOS.h"
+#include "task.h"
+}
+
+TEST(SampleTest, Example1) { EXPECT_EQ(TestDriver(), 0); }
 
 #if GTEST_OS_ESP8266 || GTEST_OS_ESP32
 #if GTEST_OS_ESP8266
@@ -49,6 +59,9 @@ void loop() { RUN_ALL_TESTS(); }
 GTEST_API_ int main(int argc, char **argv) {
   printf("Running main() from %s\n", __FILE__);
   testing::InitGoogleTest(&argc, argv);
-  return RUN_ALL_TESTS();
+  int ret = RUN_ALL_TESTS();
+  return ret;
 }
 #endif
+ 
+

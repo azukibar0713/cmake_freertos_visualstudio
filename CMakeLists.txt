@@ -9,19 +9,40 @@ cmake_minimum_required(VERSION 3.1)
 project(freertos_project C CXX)
 
 # ----------------------------
-# CMakeList.txtがあるサブディレクトリ追加.
+# コンパイルオプション.
 # ----------------------------
-add_subdirectory(./googletest/googletest)
+if (MSVC)
+    add_definitions(/source-charset:utf-8)
+endif()
+# マクロを定義する（プログラム内で#define MY_DEFINE と書くのと同じ）
+# add_compile_options(-D MY_DEFINE)
+# warningはcompile errorにはしない.
+if (MSVC)
+    # warning level 4 and all warnings as errors
+    add_compile_options(/W4 /WX-)
+else()
+    # lots of warnings and all warnings as errors
+    add_compile_options(-Wall -Wextra -pedantic -Werror)
+endif()
+add_compile_options(/WX-)
+
 
 # ----------------------------
 # include directory
 #   Makefile の -include 命令や，コンパイラでの -I オプションは include_directories で代用.
+# [TODO]
+#   include_directoriesは下位のCMakeLists.txtに反映するのでtarget_include_directoriesを使う.
 # ----------------------------
 include_directories(./src)
 include_directories(./src/Supporting_Functions)
 include_directories(./FreeRTOS/Source/include)
 include_directories(./FreeRTOS/Source/portable/MemMang)
 include_directories(./FreeRTOS/Source/portable/MSVC-MingW)
+
+# ----------------------------
+# CMakeList.txtがあるサブディレクトリ追加.
+# ----------------------------
+add_subdirectory(./googletest/googletest)
 
 # ----------------------------
 # コンパイル対象のソース一覧を作成
@@ -49,6 +70,7 @@ add_library(src OBJECT ${src_files})
 # VisualStudioのFilterを作るようにする.
 # ----------------------------
 set_property(GLOBAL PROPERTY USE_FOLDERS ON)
+
 
 # ----------------------------
 # 実行ファイルを作る方法を指定
