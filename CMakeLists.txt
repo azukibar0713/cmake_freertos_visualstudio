@@ -6,7 +6,12 @@ cmake_minimum_required(VERSION 3.1)
 # ----------------------------
 # プロジェクト名, 言語(C言語)を指定.
 # ----------------------------
-project(freertos_project C)
+project(freertos_project C CXX)
+
+# ----------------------------
+# CMakeList.txtがあるサブディレクトリ追加.
+# ----------------------------
+add_subdirectory(./googletest/googletest)
 
 # ----------------------------
 # include directory
@@ -52,3 +57,4 @@ add_executable(${PROJECT_NAME}
  $<TARGET_OBJECTS:freertos>
  $<TARGET_OBJECTS:src>
 )
+
