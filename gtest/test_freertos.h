@@ -1,1 +1,2 @@
-int drive_freertos(void);
+#pragma once
+void drive_freertos(void);

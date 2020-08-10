@@ -9,7 +9,7 @@
 /* The task functions. */
 void vTaskSample(void* pvParameters);
 
-int drive_freertos(void)
+void drive_freertos(void)
 {
     /* Create one of the two tasks. */
     xTaskCreate(vTaskSample,		/* Pointer to the function that implements the task. */
@@ -28,7 +28,7 @@ int drive_freertos(void)
     create the Idle and (if configured) Timer tasks.  Heap management, and
     techniques for trapping heap exhaustion, are described in the book text. */
     for (;; );
-    return 0;
+    //return 0;
 }
 /*-----------------------------------------------------------*/
 
