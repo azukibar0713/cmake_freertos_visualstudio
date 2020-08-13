@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include "FreeRTOS.h"
 #include "task.h"
-
+#include "LedDriver.h"
 /* Used as a loop counter to create a very crude delay. */
 #define mainDELAY_LOOP_COUNT		( 0xffffff )
 
@@ -11,6 +11,9 @@ void vTaskSample(void* pvParameters);
 
 void drive_freertos(void)
 {
+    uint16_t adrs = 0;
+    LedDriver_Create(&adrs);
+
     /* Create one of the two tasks. */
     xTaskCreate(vTaskSample,		/* Pointer to the function that implements the task. */
         "Task 1",	/* Text name for the task.  This is to facilitate debugging only. */

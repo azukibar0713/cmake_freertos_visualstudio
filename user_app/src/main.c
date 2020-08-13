@@ -57,6 +57,8 @@
 #include "FreeRTOS.h"
 #include "task.h"
 
+#include "LedDriver.h"
+
 /* Demo includes. */
 #include "supporting_functions.h"
 

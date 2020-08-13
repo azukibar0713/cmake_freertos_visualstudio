@@ -5,8 +5,8 @@
 #include <cstdio>
 #include <cstdint>
 #include "gtest/gtest.h"
+#include "gmock/gmock.h"
 #include "freertos_unittest.cpp"
-
 
 TEST(FactorialTest, HandlesZeroInput) {
     EXPECT_EQ(1, 1);
@@ -22,6 +22,7 @@ int main(int argc, char** argv) {
     int ret =  RUN_ALL_TESTS();
     return ret;
 }
+
 
 
 

@@ -8,16 +8,14 @@ cmake_minimum_required(VERSION 3.1)
 # ----------------------------
 project(freertos_project C CXX)
 
-# 以下のFREERTOS_INCLUDE_DIRを
-# include_directories($ENV{FREERTOS_INCLUDE_DIR})
-# としても各pathの設定はできなかった.スペース区切りの引数を認識しない.
-#set(ENV{FREERTOS_INCLUDE_DIR} ${PROJECT_SOURCE_DIR}/src/ ${PROJECT_SOURCE_DIR}/FreeRTOS/Source/include/\ ${PROJECT_SOURCE_DIR}/FreeRTOS/Source/portable/MemMag/\ ${PROJECT_SOURCE_DIR}/FreeRTOS/Source/portable/MSVC-MingW/)
-#message($ENV{FREERTOS_INCLUDE_DIR})
-
-set(ENV{FREERTOS_CONFIG_DIR} ${PROJECT_SOURCE_DIR}/src/)
+set(ENV{FREERTOS_CONFIG_DIR} ${PROJECT_SOURCE_DIR}/user_app/src/)
 set(ENV{FREERTOS_INCLUDE_DIR} ${PROJECT_SOURCE_DIR}/FreeRTOS/Source/include/)
 set(ENV{FREERTOS_MEMMAG_DIR} ${PROJECT_SOURCE_DIR}/FreeRTOS/Source/portable/MemMag/)
 set(ENV{FREERTOS_PORTABLE_DIR} ${PROJECT_SOURCE_DIR}/FreeRTOS/Source/portable/MSVC-MingW/)
+
+if (MSVC)
+  #set(USE_MOCK_DRIVER 1)
+endif()
 
 
 
@@ -52,10 +50,6 @@ string(REPLACE "/MD" "/MT" CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE})
 string(REPLACE "/MD" "/MT" CMAKE_CXX_FLAGS_RELWITHDEBINFO ${CMAKE_CXX_FLAGS_RELWITHDEBINFO})
 endif(MSVC)
 
-# ----------------------------
-# CMakeList.txtがあるサブディレクトリ追加.
-# ----------------------------
-add_subdirectory(./gtest)
 
 # ----------------------------
 # include directory
@@ -63,7 +57,7 @@ add_subdirectory(./gtest)
 # [TODO]
 #   include_directoriesは下位のCMakeLists.txtに反映するのでtarget_include_directoriesを使う.
 # ----------------------------
-include_directories(./src)
+include_directories(./user_app/include)
 include_directories($ENV{FREERTOS_CONFIG_DIR})
 include_directories($ENV{FREERTOS_INCLUDE_DIR})
 include_directories($ENV{FREERTOS_MEMMAG_DIR})
@@ -83,13 +77,21 @@ include_directories($ENV{FREERTOS_PORTABLE_DIR})
 # filenameがVCだとプロジェクト名になるみたい.
 # ----------------------------
 file(GLOB freertos_files FreeRTOS/Source/*.[ch] FreeRTOS/Source/portable/MSVC-MingW/*.[ch] FreeRTOS/Source/portable/MemMang/*.[ch])
-file(GLOB src_files src/*.[ch] src/Supporting_Functions/*.[ch])
+file(GLOB src_files ./user_app/src/*.[ch] src/Supporting_Functions/*.[ch])
+
+
+if(NOT USE_MOCK_DRIVER)
+  message("NOT USE_MOCK_DRIVER")
+  file(GLOB driver_files main_app/driver/*.c)
+  #file(GLOB gtest/driver/*.cpp)
+endif(NOT USE_MOCK_DRIVER)
+
 
 # ----------------------------
 # オブジェクトファイルを作るソースを指定
 # ----------------------------
-add_library(freertos OBJECT ${freertos_files})
-add_library(src OBJECT ${src_files})
+add_library(freertos OBJECT ${freertos_files} ${driver_files})
+add_library(user_app OBJECT ${src_files})
 
 # ----------------------------
 # VisualStudioのFilterを作るようにする.
@@ -98,11 +100,17 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 
 
 # ----------------------------
+# CMakeList.txtがあるサブディレクトリ追加.
+# ----------------------------
+add_subdirectory(./gtest)
+
+
+# ----------------------------
 # 実行ファイルを作る方法を指定
 # ----------------------------
 add_executable(${PROJECT_NAME}
  $<TARGET_OBJECTS:freertos>
- $<TARGET_OBJECTS:src>
+ $<TARGET_OBJECTS:user_app>
 )
 
 
