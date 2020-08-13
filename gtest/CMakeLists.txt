@@ -11,9 +11,7 @@ include_directories($ENV{FREERTOS_INCLUDE_DIR})
 include_directories($ENV{FREERTOS_MEMMAG_DIR})
 include_directories($ENV{FREERTOS_PORTABLE_DIR})
 
-#message(${CMAKE_CURRENT_SOURCE_DIR})
 file(GLOB GTEST_SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.[ch] ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp ../user_app/driver/*.c) #  ${CMAKE_CURRENT_SOURCE_DIR}/mock_driver/*.cpp)
-message(${GTEST_SOURCE_FILES})
 
 link_directories(./lib)
 
@@ -21,7 +19,7 @@ add_executable(GTEST ${GTEST_SOURCE_FILES})
 #add_executable(GTEST test_sample1.cpp test_freertos.c freertos_unittest.cpp)
 
 target_link_libraries(GTEST
- $<TARGET_OBJECTS:freertos>)
+ $<TARGET_OBJECTS:FREERTOS_OBJETCS>)
 
 target_link_libraries(GTEST debug gtestd)
 target_link_libraries(GTEST optimized gtest)

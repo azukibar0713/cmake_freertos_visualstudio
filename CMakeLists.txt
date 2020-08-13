@@ -8,16 +8,17 @@ cmake_minimum_required(VERSION 3.1)
 # ----------------------------
 project(freertos_project C CXX)
 
-set(ENV{FREERTOS_CONFIG_DIR} ${PROJECT_SOURCE_DIR}/user_app/src/)
+set(ENV{FREERTOS_CONFIG_DIR} ${PROJECT_SOURCE_DIR}/user_app/include/)
 set(ENV{FREERTOS_INCLUDE_DIR} ${PROJECT_SOURCE_DIR}/FreeRTOS/Source/include/)
 set(ENV{FREERTOS_MEMMAG_DIR} ${PROJECT_SOURCE_DIR}/FreeRTOS/Source/portable/MemMag/)
 set(ENV{FREERTOS_PORTABLE_DIR} ${PROJECT_SOURCE_DIR}/FreeRTOS/Source/portable/MSVC-MingW/)
 
+# ----------------------------
+# 本物 or Mock.
+# ----------------------------
 if (MSVC)
   #set(USE_MOCK_DRIVER 1)
 endif()
-
-
 
 # ----------------------------
 # コンパイルオプション.
@@ -50,14 +51,12 @@ string(REPLACE "/MD" "/MT" CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE})
 string(REPLACE "/MD" "/MT" CMAKE_CXX_FLAGS_RELWITHDEBINFO ${CMAKE_CXX_FLAGS_RELWITHDEBINFO})
 endif(MSVC)
 
-
 # ----------------------------
 # include directory
 #   Makefile の -include 命令や，コンパイラでの -I オプションは include_directories で代用.
 # [TODO]
 #   include_directoriesは下位のCMakeLists.txtに反映するのでtarget_include_directoriesを使う.
 # ----------------------------
-include_directories(./user_app/include)
 include_directories($ENV{FREERTOS_CONFIG_DIR})
 include_directories($ENV{FREERTOS_INCLUDE_DIR})
 include_directories($ENV{FREERTOS_MEMMAG_DIR})
@@ -65,24 +64,14 @@ include_directories($ENV{FREERTOS_PORTABLE_DIR})
 
 # ----------------------------
 # コンパイル対象のソース一覧を作成
-#   - 指定されたGLOBパターン<globbing_expressions>にマッチするファイルを探索し、その一覧をリストとして変数<variable>に格納します。
-#     このとき絶対パスで格納されますが、RELATIVE <path>が指定されていると、このパスからの相対パスとなります。
-#   - 以下の正規表現のメタ文字に似たものが使えます。
-#       - 任意の文字の0回以上の繰り返し*
-#       - 任意の文字?
-#       - ブラケット内で指定された文字[ ]とその範囲
-# フォーマット
-#   file(WRITE <filename> [<content1> ...])
-#   file(APPEND <filename> [<content1> ...])
-# filenameがVCだとプロジェクト名になるみたい.
 # ----------------------------
-file(GLOB freertos_files FreeRTOS/Source/*.[ch] FreeRTOS/Source/portable/MSVC-MingW/*.[ch] FreeRTOS/Source/portable/MemMang/*.[ch])
-file(GLOB src_files ./user_app/src/*.[ch] src/Supporting_Functions/*.[ch])
+#file(GLOB freertos_files FreeRTOS/Source/*.[ch] FreeRTOS/Source/portable/MSVC-MingW/*.[ch] FreeRTOS/Source/portable/MemMang/*.[ch])
+#file(GLOB src_files ./user_app/src/*.[ch] src/Supporting_Functions/*.[ch])
 
 
 if(NOT USE_MOCK_DRIVER)
   message("NOT USE_MOCK_DRIVER")
-  file(GLOB driver_files main_app/driver/*.c)
+  file(GLOB DRIVER_FILESa user_app/driver/*.c)
   #file(GLOB gtest/driver/*.cpp)
 endif(NOT USE_MOCK_DRIVER)
 
@@ -90,8 +79,8 @@ endif(NOT USE_MOCK_DRIVER)
 # ----------------------------
 # オブジェクトファイルを作るソースを指定
 # ----------------------------
-add_library(freertos OBJECT ${freertos_files} ${driver_files})
-add_library(user_app OBJECT ${src_files})
+#add_library(freertos OBJECT ${freertos_files} ${driver_files})
+#add_library(user_app OBJECT ${src_files})
 
 # ----------------------------
 # VisualStudioのFilterを作るようにする.
@@ -102,15 +91,17 @@ set_property(GLOBAL PROPERTY USE_FOLDERS ON)
 # ----------------------------
 # CMakeList.txtがあるサブディレクトリ追加.
 # ----------------------------
+add_subdirectory(./FREERTOS)
+add_subdirectory(./user_app)
 add_subdirectory(./gtest)
 
 
 # ----------------------------
 # 実行ファイルを作る方法を指定
 # ----------------------------
-add_executable(${PROJECT_NAME}
- $<TARGET_OBJECTS:freertos>
- $<TARGET_OBJECTS:user_app>
-)
+#add_executable(${PROJECT_NAME}
+# $<TARGET_OBJECTS:freertos>
+# $<TARGET_OBJECTS:user_app>
+#)
 
 
