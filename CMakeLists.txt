@@ -17,7 +17,7 @@ set(ENV{FREERTOS_PORTABLE_DIR} ${PROJECT_SOURCE_DIR}/FreeRTOS/Source/portable/MS
 # –{•¨ or Mock.
 # ----------------------------
 if (MSVC)
-  #set(USE_MOCK_DRIVER 1)
+  set(USE_MOCK_DRIVER 1)
 endif()
 
 # ----------------------------
@@ -69,11 +69,12 @@ include_directories($ENV{FREERTOS_PORTABLE_DIR})
 #file(GLOB src_files ./user_app/src/*.[ch] src/Supporting_Functions/*.[ch])
 
 
-if(NOT USE_MOCK_DRIVER)
-  message("NOT USE_MOCK_DRIVER")
-  file(GLOB DRIVER_FILESa user_app/driver/*.c)
-  #file(GLOB gtest/driver/*.cpp)
-endif(NOT USE_MOCK_DRIVER)
+if(USE_MOCK_DRIVER)
+  message("Use Mock Driver")
+  file(GLOB DRIVER_FILES ./gtest/mock_driver/*.cpp)
+elseif(USE_MOCK_DRIVER)
+  file(GLOB DRIVER_FILES ./user_app/driver/*.c)
+endif(USE_MOCK_DRIVER)
 
 
 # ----------------------------

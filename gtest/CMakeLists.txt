@@ -1,4 +1,5 @@
 cmake_minimum_required(VERSION 3.1)
+#project(gtest_project C CXX)
 
 include_directories(./include)
 include_directories(../user_app/include)
@@ -11,15 +12,18 @@ include_directories($ENV{FREERTOS_INCLUDE_DIR})
 include_directories($ENV{FREERTOS_MEMMAG_DIR})
 include_directories($ENV{FREERTOS_PORTABLE_DIR})
 
-file(GLOB GTEST_SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/*.[ch] ${CMAKE_CURRENT_SOURCE_DIR}/*.cpp ../user_app/driver/*.c) #  ${CMAKE_CURRENT_SOURCE_DIR}/mock_driver/*.cpp)
+file(GLOB GTEST_SOURCE_FILES ./*.[ch] ./*.cpp ${DRIVER_FILES})
+message(${GTEST_SOURCE_FILES})
 
 link_directories(./lib)
 
 add_executable(GTEST ${GTEST_SOURCE_FILES})
-#add_executable(GTEST test_sample1.cpp test_freertos.c freertos_unittest.cpp)
+#add_library(FREERTOS_OBJETCS OBJECT ${FREERTOS_SOURCE_FILES})
 
 target_link_libraries(GTEST
- $<TARGET_OBJECTS:FREERTOS_OBJETCS>)
+  $<TARGET_OBJECTS:FREERTOS>
+  $<TARGET_OBJECTS:USER_APP>
+ )
 
 target_link_libraries(GTEST debug gtestd)
 target_link_libraries(GTEST optimized gtest)

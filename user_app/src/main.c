@@ -70,7 +70,7 @@ void vTask1( void *pvParameters );
 void vTask2( void *pvParameters );
 
 /*-----------------------------------------------------------*/
-
+#if 0
 int main( void )
 {
 	/* Create one of the two tasks. */
@@ -94,6 +94,7 @@ int main( void )
 	for( ;; );
 	return 0;
 }
+#endif
 /*-----------------------------------------------------------*/
 
 void vTask1( void *pvParameters )

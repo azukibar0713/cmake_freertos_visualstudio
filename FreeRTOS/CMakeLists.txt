@@ -5,10 +5,12 @@ file(GLOB FREERTOS_SOURCE_FILES ./*.[ch])
 # ----------------------------
 file(GLOB FREERTOS_SOURCE_FILES ./Source/*.[ch] ./Source/portable/MSVC-MingW/*.[ch] ./Source/portable/MemMang/*.[ch])
 
+#add_executable(FREERTOS ${FREERTOS_SOURCE_FILES})
 # ----------------------------
 # オブジェクトファイル作成.
 # ----------------------------
-add_library(FREERTOS_OBJETCS ${FREERTOS_SOURCE_FILES})
+add_library(FREERTOS OBJECT ${FREERTOS_SOURCE_FILES})
+
 
 # ----------------------------
 # インクルードディレクトリ.

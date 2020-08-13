@@ -6,19 +6,23 @@
 #include <cstdint>
 #include "gtest/gtest.h"
 #include "gmock/gmock.h"
+#if 0
 #include "freertos_unittest.cpp"
+TEST_F(FreeRtosUnitTest, Sample1) {
+    _sleep(100);
+    EXPECT_EQ(1, 1);
+}
+#endif
 
 TEST(FactorialTest, HandlesZeroInput) {
     EXPECT_EQ(1, 1);
 }
 
-TEST_F(FreeRtosUnitTest, Sample1) {
-    _sleep(100);
-    EXPECT_EQ(1, 1);
-}
+
 
 int main(int argc, char** argv) {
     ::testing::InitGoogleTest(&argc, argv);
+    ::testing::InitGoogleMock(&argc, argv);
     int ret =  RUN_ALL_TESTS();
     return ret;
 }

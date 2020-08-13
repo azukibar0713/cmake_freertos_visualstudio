@@ -11,8 +11,7 @@ void vTaskSample(void* pvParameters);
 
 void drive_freertos(void)
 {
-    uint16_t adrs = 0;
-    LedDriver_Create(&adrs);
+
 
     /* Create one of the two tasks. */
     xTaskCreate(vTaskSample,		/* Pointer to the function that implements the task. */
