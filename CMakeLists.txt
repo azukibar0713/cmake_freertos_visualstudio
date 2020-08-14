@@ -13,12 +13,6 @@ set(ENV{FREERTOS_INCLUDE_DIR} ${PROJECT_SOURCE_DIR}/FreeRTOS/Source/include/)
 set(ENV{FREERTOS_MEMMAG_DIR} ${PROJECT_SOURCE_DIR}/FreeRTOS/Source/portable/MemMag/)
 set(ENV{FREERTOS_PORTABLE_DIR} ${PROJECT_SOURCE_DIR}/FreeRTOS/Source/portable/MSVC-MingW/)
 
-# ----------------------------
-# 本物 or Mock.
-# ----------------------------
-if (MSVC)
-  set(USE_MOCK_DRIVER 1)
-endif()
 
 # ----------------------------
 # コンパイルオプション.
@@ -69,13 +63,14 @@ include_directories($ENV{FREERTOS_PORTABLE_DIR})
 #file(GLOB src_files ./user_app/src/*.[ch] src/Supporting_Functions/*.[ch])
 
 
-if(USE_MOCK_DRIVER)
+if(MSVC)
   message("Use Mock Driver")
   file(GLOB DRIVER_FILES ./gtest/mock_driver/*.cpp)
-elseif(USE_MOCK_DRIVER)
+else()
+  # 未実装だが本番環境のビルド時には本物のディレクトリを指定.
+  message("Not Use Mock Driver")
   file(GLOB DRIVER_FILES ./user_app/driver/*.c)
-endif(USE_MOCK_DRIVER)
-
+endif(MSVC)
 
 # ----------------------------
 # オブジェクトファイルを作るソースを指定

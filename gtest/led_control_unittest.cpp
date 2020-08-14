@@ -14,20 +14,14 @@ protected:
 	}
 };
 
-TEST_F(LedControlUnitTest, InitializeLED) {
-	MockLedDriver mock;
-	// 値は何でも良いので1回呼ばれることを期待（※呼ぶ前に記述する必要がある）
-	EXPECT_CALL(mock, LedDriver_Create(testing::_)) 
-		.Times(1);
-	SetdMockLedDriver(&mock);
-	InitializeLED();
-}
-
-TEST_F(LedControlUnitTest, FinalizeLED) {
+TEST_F(LedControlUnitTest, Initialize_Finalize_LED) {
 	MockLedDriver mock;
 	// 1回呼ばれることを期待（※呼ぶ前に記述する必要がある）
+	EXPECT_CALL(mock, LedDriver_Create(testing::_))   // "_"は値は任意でOK.
+		.Times(1);
 	EXPECT_CALL(mock, LedDriver_Destroy())
 		.Times(1);
 	SetdMockLedDriver(&mock);
+	InitializeLED();
 	FinalizeLED();
 }
